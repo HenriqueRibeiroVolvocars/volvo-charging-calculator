@@ -36,7 +36,7 @@ export function VehicleSelection({ onSelect }: VehicleSelectionProps) {
             >
               <div className="aspect-[4/3] overflow-hidden bg-gradient-subtle">
                 <img
-                  src={`/src/assets/${vehicle.image}`}
+                  src={vehicle.image}
                   alt={vehicle.displayName}
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                 />

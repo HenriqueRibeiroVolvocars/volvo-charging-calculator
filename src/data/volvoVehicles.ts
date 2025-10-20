@@ -1,3 +1,10 @@
+import ex30Image from '@/assets/01-EX30.png';
+import ec40Image from '@/assets/02-EC40.png';
+import xc40Image from '@/assets/03-XC40.png';
+import xc60Image from '@/assets/04-XC60.png';
+import xc90Image from '@/assets/05-XC90.png';
+import ex90Image from '@/assets/06-EX90.png';
+
 export interface VolvoVehicle {
   id: string;
   name: string;
@@ -17,7 +24,7 @@ export const volvoVehicles: VolvoVehicle[] = [
     batteryCapacity: 65,
     autonomy: 338,
     priceRange: '220-300k',
-    image: '01-EX30.png',
+    image: ex30Image,
     category: 'linha30'
   },
   {
@@ -27,7 +34,7 @@ export const volvoVehicles: VolvoVehicle[] = [
     batteryCapacity: 79,
     autonomy: 404,
     priceRange: '300-400k',
-    image: '02-EC40.png',
+    image: ec40Image,
     category: 'linha40'
   },
   {
@@ -37,7 +44,7 @@ export const volvoVehicles: VolvoVehicle[] = [
     batteryCapacity: 79,
     autonomy: 393,
     priceRange: '300-400k',
-    image: '03-XC40.png',
+    image: xc40Image,
     category: 'linha40'
   },
   {
@@ -47,7 +54,7 @@ export const volvoVehicles: VolvoVehicle[] = [
     batteryCapacity: 18.8,
     autonomy: 85,
     priceRange: '460-540k',
-    image: '04-XC60.png',
+    image: xc60Image,
     category: 'linha60'
   },
   {
@@ -57,7 +64,7 @@ export const volvoVehicles: VolvoVehicle[] = [
     batteryCapacity: 18.8,
     autonomy: 85,
     priceRange: '680-850k',
-    image: '05-XC90.png',
+    image: xc90Image,
     category: 'linha90'
   },
   {
@@ -67,7 +74,7 @@ export const volvoVehicles: VolvoVehicle[] = [
     batteryCapacity: 111,
     autonomy: 459,
     priceRange: '680-850k',
-    image: '06-EX90.png',
+    image: ex90Image,
     category: 'linha90'
   }
 ];
