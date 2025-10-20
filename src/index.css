@@ -8,56 +8,57 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Volvo Brand Colors - Nordic Premium Design */
+    /* Volvo Official Colors - Minimalist Nordic Design */
     --background: 0 0% 100%;
-    --foreground: 210 40% 12%;
+    --foreground: 0 0% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 40% 12%;
+    --card-foreground: 0 0% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 12%;
+    --popover-foreground: 0 0% 9%;
 
-    /* Volvo Deep Blue - Primary Brand Color */
-    --primary: 210 100% 17%;
+    /* Volvo Black - Primary Brand Color */
+    --primary: 0 0% 9%;
     --primary-foreground: 0 0% 100%;
     
-    /* Light Blue Accent */
-    --secondary: 200 50% 95%;
-    --secondary-foreground: 210 100% 17%;
+    /* Soft Gray Background */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
 
     /* Neutral Gray Tones */
-    --muted: 210 15% 96%;
-    --muted-foreground: 210 10% 45%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 200 95% 60%;
+    /* Accent - Subtle Blue Gray */
+    --accent: 210 20% 40%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 20% 90%;
-    --input: 210 20% 90%;
-    --ring: 210 100% 17%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 9%;
 
-    --radius: 0.75rem;
+    --radius: 0.25rem;
 
     /* Volvo-specific design tokens */
-    --volvo-blue-dark: 210 100% 17%;
-    --volvo-blue-medium: 210 80% 40%;
-    --volvo-blue-light: 200 95% 60%;
-    --volvo-gray-dark: 210 15% 25%;
-    --volvo-gray-medium: 210 10% 60%;
-    --volvo-gray-light: 210 10% 95%;
+    --volvo-black: 0 0% 9%;
+    --volvo-gray-dark: 0 0% 25%;
+    --volvo-gray-medium: 0 0% 55%;
+    --volvo-gray-light: 0 0% 96%;
+    --volvo-blue-subtle: 210 20% 40%;
+    --volvo-white: 0 0% 100%;
     
-    /* Gradients */
-    --gradient-volvo: linear-gradient(135deg, hsl(210 100% 17%), hsl(210 80% 40%));
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 15% 98%));
+    /* Gradients - Subtle and Elegant */
+    --gradient-volvo: linear-gradient(135deg, hsl(0 0% 9%), hsl(0 0% 20%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(0 0% 98%));
     
-    /* Shadows */
-    --shadow-soft: 0 4px 20px -4px hsl(210 100% 17% / 0.1);
-    --shadow-medium: 0 10px 40px -10px hsl(210 100% 17% / 0.15);
-    --shadow-strong: 0 20px 60px -15px hsl(210 100% 17% / 0.25);
+    /* Shadows - Soft and Refined */
+    --shadow-soft: 0 2px 10px -2px hsl(0 0% 0% / 0.08);
+    --shadow-medium: 0 8px 30px -8px hsl(0 0% 0% / 0.12);
+    --shadow-strong: 0 16px 50px -12px hsl(0 0% 0% / 0.18);
     
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -65,33 +66,33 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 210 40% 8%;
+    --background: 0 0% 9%;
     --foreground: 0 0% 98%;
 
-    --card: 210 35% 12%;
+    --card: 0 0% 12%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 210 35% 12%;
+    --popover: 0 0% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 200 95% 60%;
-    --primary-foreground: 210 40% 8%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
 
-    --secondary: 210 30% 20%;
+    --secondary: 0 0% 18%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 30% 18%;
-    --muted-foreground: 210 10% 65%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 200 95% 60%;
-    --accent-foreground: 210 40% 8%;
+    --accent: 210 20% 60%;
+    --accent-foreground: 0 0% 9%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 210 30% 22%;
-    --input: 210 30% 22%;
-    --ring: 200 95% 60%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 0 0% 98%;
   }
 }
 
