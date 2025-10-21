@@ -48,11 +48,31 @@ export function ResultsView({
   }, [volvoVehicle, competitor, dailyKm, cityPercent, highwayPercent, energyPrice, fuelPrice, chargingPower, chargingWindow]);
 
   const chartData = [
-    { year: '1 ano', 'Economia Acumulada': results.cumulativeSavings.year1 },
-    { year: '2 anos', 'Economia Acumulada': results.cumulativeSavings.year2 },
-    { year: '3 anos', 'Economia Acumulada': results.cumulativeSavings.year3 },
-    { year: '4 anos', 'Economia Acumulada': results.cumulativeSavings.year4 },
-    { year: '5 anos', 'Economia Acumulada': results.cumulativeSavings.year5 }
+    { 
+      year: '1 ano', 
+      'Elétrico': results.cumulativeCosts.year1.ev,
+      'Combustão': results.cumulativeCosts.year1.ice
+    },
+    { 
+      year: '2 anos', 
+      'Elétrico': results.cumulativeCosts.year2.ev,
+      'Combustão': results.cumulativeCosts.year2.ice
+    },
+    { 
+      year: '3 anos', 
+      'Elétrico': results.cumulativeCosts.year3.ev,
+      'Combustão': results.cumulativeCosts.year3.ice
+    },
+    { 
+      year: '4 anos', 
+      'Elétrico': results.cumulativeCosts.year4.ev,
+      'Combustão': results.cumulativeCosts.year4.ice
+    },
+    { 
+      year: '5 anos', 
+      'Elétrico': results.cumulativeCosts.year5.ev,
+      'Combustão': results.cumulativeCosts.year5.ice
+    }
   ];
 
   return (
@@ -182,11 +202,11 @@ export function ResultsView({
         </Card>
       </div>
 
-      {/* 5-Year Cumulative Savings Chart */}
+      {/* 5-Year Cumulative Costs Chart */}
       <Card className="p-8 shadow-soft mb-8">
-        <h3 className="text-2xl font-bold text-primary mb-2">Economia Acumulada ao Longo do Tempo</h3>
+        <h3 className="text-2xl font-bold text-primary mb-2">Custos Acumulados ao Longo do Tempo</h3>
         <p className="text-sm text-muted-foreground mb-6">
-          Veja como a economia cresce com o passar dos anos
+          Comparação dos custos totais entre elétrico e combustão
         </p>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
@@ -212,11 +232,20 @@ export function ResultsView({
             <Legend />
             <Line 
               type="monotone" 
-              dataKey="Economia Acumulada" 
+              dataKey="Elétrico" 
               stroke="hsl(var(--primary))" 
               strokeWidth={3}
               dot={{ fill: 'hsl(var(--primary))', r: 6 }}
               activeDot={{ r: 8 }}
+            />
+            <Line 
+              type="monotone" 
+              dataKey="Combustão" 
+              stroke="hsl(var(--muted-foreground))" 
+              strokeWidth={3}
+              dot={{ fill: 'hsl(var(--muted-foreground))', r: 6 }}
+              activeDot={{ r: 8 }}
+              strokeDasharray="5 5"
             />
           </LineChart>
         </ResponsiveContainer>

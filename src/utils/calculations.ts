@@ -44,12 +44,12 @@ export interface CalculationResults {
     monthly: number;
     yearly: number;
   };
-  cumulativeSavings: {
-    year1: number;
-    year2: number;
-    year3: number;
-    year4: number;
-    year5: number;
+  cumulativeCosts: {
+    year1: { ev: number; ice: number; };
+    year2: { ev: number; ice: number; };
+    year3: { ev: number; ice: number; };
+    year4: { ev: number; ice: number; };
+    year5: { ev: number; ice: number; };
   };
 }
 
@@ -76,6 +76,8 @@ export function calculateComparison(inputs: CalculationInputs): CalculationResul
   const iceDailyCost = dailyLiters * inputs.fuelPricePerLiter;
 
   const yearlySavings = (iceDailyCost - evDailyCost) * 365;
+  const evYearlyCost = evDailyCost * 365;
+  const iceYearlyCost = iceDailyCost * 365;
 
   return {
     ev: {
@@ -107,12 +109,12 @@ export function calculateComparison(inputs: CalculationInputs): CalculationResul
       monthly: (iceDailyCost - evDailyCost) * 30,
       yearly: yearlySavings
     },
-    cumulativeSavings: {
-      year1: yearlySavings,
-      year2: yearlySavings * 2,
-      year3: yearlySavings * 3,
-      year4: yearlySavings * 4,
-      year5: yearlySavings * 5
+    cumulativeCosts: {
+      year1: { ev: evYearlyCost, ice: iceYearlyCost },
+      year2: { ev: evYearlyCost * 2, ice: iceYearlyCost * 2 },
+      year3: { ev: evYearlyCost * 3, ice: iceYearlyCost * 3 },
+      year4: { ev: evYearlyCost * 4, ice: iceYearlyCost * 4 },
+      year5: { ev: evYearlyCost * 5, ice: iceYearlyCost * 5 }
     }
   };
 }
