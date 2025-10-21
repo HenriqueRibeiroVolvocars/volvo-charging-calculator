@@ -6,7 +6,7 @@ import { RotateCcw, Zap, Fuel, TrendingDown, Clock, Battery } from 'lucide-react
 import { VolvoVehicle } from '@/data/volvoVehicles';
 import { CompetitorVehicle } from '@/data/competitorVehicles';
 import { calculateComparison, formatCurrency, formatNumber } from '@/utils/calculations';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface ResultsViewProps {
   volvoVehicle: VolvoVehicle;
@@ -48,18 +48,11 @@ export function ResultsView({
   }, [volvoVehicle, competitor, dailyKm, cityPercent, highwayPercent, energyPrice, fuelPrice, chargingPower, chargingWindow]);
 
   const chartData = [
-    { month: 'Jan', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Fev', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Mar', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Abr', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Mai', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Jun', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Jul', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Ago', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Set', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Out', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Nov', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost },
-    { month: 'Dez', Elétrico: results.ev.monthlyCost, Combustão: results.ice.monthlyCost }
+    { year: '1 ano', 'Economia Acumulada': results.cumulativeSavings.year1 },
+    { year: '2 anos', 'Economia Acumulada': results.cumulativeSavings.year2 },
+    { year: '3 anos', 'Economia Acumulada': results.cumulativeSavings.year3 },
+    { year: '4 anos', 'Economia Acumulada': results.cumulativeSavings.year4 },
+    { year: '5 anos', 'Economia Acumulada': results.cumulativeSavings.year5 }
   ];
 
   return (
@@ -73,19 +66,19 @@ export function ResultsView({
           Comparativo de Custos
         </h2>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Com o <span className="font-bold text-accent">{volvoVehicle.displayName}</span>, você gastaria{' '}
-          <span className="font-bold text-accent">{formatCurrency(results.ev.dailyCost)}/dia</span> e precisaria de{' '}
-          <span className="font-bold text-accent">{formatNumber(results.ev.dailyChargingTime, 1)}h</span> de recarga.
-          No <span className="font-bold text-destructive">{competitor.marca} {competitor.modelo}</span>, seriam{' '}
-          <span className="font-bold text-destructive">{formatCurrency(results.ice.dailyCost)}/dia</span>.
+          Com o <span className="font-bold text-primary">{volvoVehicle.displayName}</span>, você gastaria{' '}
+          <span className="font-bold text-primary">{formatCurrency(results.ev.dailyCost)}/dia</span> e precisaria de{' '}
+          <span className="font-bold text-primary">{formatNumber(results.ev.dailyChargingTime, 1)}h</span> de recarga.
+          No <span className="font-bold text-muted-foreground">{competitor.marca} {competitor.modelo}</span>, seriam{' '}
+          <span className="font-bold text-muted-foreground">{formatCurrency(results.ice.dailyCost)}/dia</span>.
         </p>
       </motion.div>
 
       {/* Cost Comparison Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card className="p-8 bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent shadow-strong">
+        <Card className="p-8 bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary shadow-soft">
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-3 rounded-full bg-accent">
+            <div className="p-3 rounded-full bg-primary">
               <Zap className="h-8 w-8 text-white" />
             </div>
             <div>
@@ -97,7 +90,7 @@ export function ResultsView({
           <div className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground">Custo Diário</p>
-              <p className="text-4xl font-bold text-accent">{formatCurrency(results.ev.dailyCost)}</p>
+              <p className="text-4xl font-bold text-primary">{formatCurrency(results.ev.dailyCost)}</p>
             </div>
             <div className="grid grid-cols-3 gap-4 pt-4 border-t">
               <div>
@@ -116,10 +109,10 @@ export function ResultsView({
           </div>
         </Card>
 
-        <Card className="p-8 bg-gradient-to-br from-destructive/10 to-destructive/5 border-2 border-destructive shadow-strong">
+        <Card className="p-8 bg-gradient-to-br from-secondary/50 to-secondary/30 border-2 border-border shadow-soft">
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-3 rounded-full bg-destructive">
-              <Fuel className="h-8 w-8 text-white" />
+            <div className="p-3 rounded-full bg-muted">
+              <Fuel className="h-8 w-8 text-muted-foreground" />
             </div>
             <div>
               <h3 className="text-2xl font-bold text-primary">{competitor.marca}</h3>
@@ -130,7 +123,7 @@ export function ResultsView({
           <div className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground">Custo Diário</p>
-              <p className="text-4xl font-bold text-destructive">{formatCurrency(results.ice.dailyCost)}</p>
+              <p className="text-4xl font-bold text-foreground">{formatCurrency(results.ice.dailyCost)}</p>
             </div>
             <div className="grid grid-cols-3 gap-4 pt-4 border-t">
               <div>
@@ -160,12 +153,12 @@ export function ResultsView({
           <p className="text-3xl font-bold text-primary">{formatCurrency(results.savings.yearly)}</p>
         </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-accent/10 to-accent/5">
+        <Card className="p-6 bg-gradient-to-br from-primary/10 to-primary/5">
           <div className="flex items-center gap-3 mb-4">
-            <Clock className="h-6 w-6 text-accent" />
+            <Clock className="h-6 w-6 text-primary" />
             <h4 className="font-bold text-primary">Tempo de Recarga</h4>
           </div>
-          <p className="text-3xl font-bold text-accent">
+          <p className="text-3xl font-bold text-primary">
             {formatNumber(results.ev.dailyChargingTime, 1)}h
           </p>
           <p className="text-xs text-muted-foreground mt-2">
@@ -175,12 +168,12 @@ export function ResultsView({
           </p>
         </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-accent/10 to-accent/5">
+        <Card className="p-6 bg-gradient-to-br from-primary/10 to-primary/5">
           <div className="flex items-center gap-3 mb-4">
-            <Battery className="h-6 w-6 text-accent" />
+            <Battery className="h-6 w-6 text-primary" />
             <h4 className="font-bold text-primary">Bateria/Dia</h4>
           </div>
-          <p className="text-3xl font-bold text-accent">
+          <p className="text-3xl font-bold text-primary">
             {formatNumber(results.ev.dailyBatteryPercent, 1)}%
           </p>
           <p className="text-xs text-muted-foreground mt-2">
@@ -189,19 +182,43 @@ export function ResultsView({
         </Card>
       </div>
 
-      {/* 12-Month Chart */}
-      <Card className="p-8 shadow-strong mb-8">
-        <h3 className="text-2xl font-bold text-primary mb-6">Comparativo Anual (12 meses)</h3>
+      {/* 5-Year Cumulative Savings Chart */}
+      <Card className="p-8 shadow-soft mb-8">
+        <h3 className="text-2xl font-bold text-primary mb-2">Economia Acumulada ao Longo do Tempo</h3>
+        <p className="text-sm text-muted-foreground mb-6">
+          Veja como a economia cresce com o passar dos anos
+        </p>
         <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis 
+              dataKey="year" 
+              stroke="hsl(var(--foreground))"
+              style={{ fontSize: '14px' }}
+            />
+            <YAxis 
+              stroke="hsl(var(--foreground))"
+              style={{ fontSize: '14px' }}
+              tickFormatter={(value) => formatCurrency(value)}
+            />
+            <Tooltip 
+              formatter={(value) => formatCurrency(Number(value))}
+              contentStyle={{
+                backgroundColor: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                borderRadius: '8px'
+              }}
+            />
             <Legend />
-            <Bar dataKey="Elétrico" fill="hsl(200, 95%, 60%)" radius={[8, 8, 0, 0]} />
-            <Bar dataKey="Combustão" fill="hsl(0, 72%, 51%)" radius={[8, 8, 0, 0]} />
-          </BarChart>
+            <Line 
+              type="monotone" 
+              dataKey="Economia Acumulada" 
+              stroke="hsl(var(--primary))" 
+              strokeWidth={3}
+              dot={{ fill: 'hsl(var(--primary))', r: 6 }}
+              activeDot={{ r: 8 }}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </Card>
 

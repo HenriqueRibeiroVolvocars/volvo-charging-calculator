@@ -46,7 +46,7 @@ export function CompetitorSelection({ volvoCategory, onSelect, onBack }: Competi
         className="text-center mb-8"
       >
         <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-          Escolha o Concorrente
+          Escolha o veículo que deseja comparar
         </h2>
         <p className="text-xl text-muted-foreground mb-6">
           Selecione um veículo a combustão para comparar

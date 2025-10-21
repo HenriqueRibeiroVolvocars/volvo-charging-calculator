@@ -15,7 +15,7 @@ export function VehicleSelection({ onSelect }: VehicleSelectionProps) {
         className="text-center mb-12"
       >
         <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-          Escolha seu Volvo Elétrico
+          Escolha seu Volvo
         </h2>
         <p className="text-xl text-muted-foreground">
           Selecione o modelo para iniciar a comparação
@@ -49,7 +49,6 @@ export function VehicleSelection({ onSelect }: VehicleSelectionProps) {
                   <p className="text-sm">
                     <span className="font-semibold text-foreground">{vehicle.batteryCapacity} kWh</span> • {vehicle.autonomy} km
                   </p>
-                  <p className="text-xs opacity-70">{vehicle.priceRange}</p>
                 </div>
               </div>
             </Card>

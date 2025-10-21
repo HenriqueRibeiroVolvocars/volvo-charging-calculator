@@ -44,6 +44,13 @@ export interface CalculationResults {
     monthly: number;
     yearly: number;
   };
+  cumulativeSavings: {
+    year1: number;
+    year2: number;
+    year3: number;
+    year4: number;
+    year5: number;
+  };
 }
 
 export function calculateComparison(inputs: CalculationInputs): CalculationResults {
@@ -67,6 +74,8 @@ export function calculateComparison(inputs: CalculationInputs): CalculationResul
   
   const dailyLiters = (inputs.dailyKm / 100) * litersPer100KmAvg;
   const iceDailyCost = dailyLiters * inputs.fuelPricePerLiter;
+
+  const yearlySavings = (iceDailyCost - evDailyCost) * 365;
 
   return {
     ev: {
@@ -96,7 +105,14 @@ export function calculateComparison(inputs: CalculationInputs): CalculationResul
       daily: iceDailyCost - evDailyCost,
       weekly: (iceDailyCost - evDailyCost) * 7,
       monthly: (iceDailyCost - evDailyCost) * 30,
-      yearly: (iceDailyCost - evDailyCost) * 365
+      yearly: yearlySavings
+    },
+    cumulativeSavings: {
+      year1: yearlySavings,
+      year2: yearlySavings * 2,
+      year3: yearlySavings * 3,
+      year4: yearlySavings * 4,
+      year5: yearlySavings * 5
     }
   };
 }
