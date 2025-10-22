@@ -86,7 +86,6 @@ const Index = () => {
               transition={{ duration: 0.3 }}
             >
               <CompetitorSelection
-                volvoCategory={appState.selectedVolvo.category}
                 onSelect={(competitor) => {
                   updateState({ selectedCompetitor: competitor });
                   goToStep('usage');
