@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ButtonDownload } from '@/components/steps/ButtonDownload';
 import { motion } from 'framer-motion';
 import { RotateCcw, Zap, Fuel, TrendingDown, Clock, Battery } from 'lucide-react';
 import { VolvoVehicle } from '@/data/volvoVehicles';
@@ -76,7 +77,7 @@ export function ResultsView({
   ];
 
   return (
-    <div className="container mx-auto max-w-7xl">
+    <div id="results-container" className="container mx-auto max-w-7xl">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -251,7 +252,9 @@ export function ResultsView({
         </ResponsiveContainer>
       </Card>
 
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center gap-4 mb-8">
+        <ButtonDownload />    
+
         <Button
           onClick={onReset}
           size="lg"
@@ -262,6 +265,8 @@ export function ResultsView({
           Nova Comparação
         </Button>
       </div>
+
+
     </div>
   );
 }

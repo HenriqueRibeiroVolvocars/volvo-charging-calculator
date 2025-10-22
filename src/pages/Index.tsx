@@ -48,10 +48,20 @@ const Index = () => {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-sm shadow-lg">
         <div className="container mx-auto px-6 py-6">
-          <h1 className="text-3xl font-bold text-primary-foreground tracking-wide">
-            VOLVO HOME CHARGE
-          </h1>
-          <p className="text-sm text-primary-foreground/80 mt-1">
+          {/* Grupo logo + título */}
+          <div className="flex items-center gap-3">
+            <img
+              src="/src/assets/volvo-logo.png"
+              alt="Volvo Logo"
+              className="w-10 h-10 object-contain"
+            />
+            <h1 className="text-3xl font-bold text-primary-foreground tracking-wide">
+              VOLVO HOME CHARGING
+            </h1>
+          </div>
+
+          {/* Subtítulo só abaixo do texto */}
+          <p className="text-sm text-primary-foreground/80 mt-2 ml-[55px]">
             Comparativo de custos: Elétrico vs Combustão
           </p>
         </div>
