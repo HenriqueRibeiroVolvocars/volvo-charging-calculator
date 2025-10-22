@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Volvo Official Colors - Minimalist Nordic Design */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+
+    /* Volvo Black - Primary Brand Color */
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Soft Gray Background */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+
+    /* Neutral Gray Tones */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    /* Accent - Subtle Blue Gray */
+    --accent: 210 20% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 9%;
+
+    --radius: 0.25rem;
+
+    /* Volvo-specific design tokens */
+    --volvo-black: 0 0% 9%;
+    --volvo-gray-dark: 0 0% 25%;
+    --volvo-gray-medium: 0 0% 55%;
+    --volvo-gray-light: 0 0% 96%;
+    --volvo-blue-subtle: 210 20% 40%;
+    --volvo-white: 0 0% 100%;
+    
+    /* Gradients - Subtle and Elegant */
+    --gradient-volvo: linear-gradient(135deg, hsl(0 0% 9%), hsl(0 0% 20%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(0 0% 98%));
+    
+    /* Shadows - Soft and Refined */
+    --shadow-soft: 0 2px 10px -2px hsl(0 0% 0% / 0.08);
+    --shadow-medium: 0 8px 30px -8px hsl(0 0% 0% / 0.12);
+    --shadow-strong: 0 16px 50px -12px hsl(0 0% 0% / 0.18);
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .dark {
+    --background: 0 0% 9%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 210 20% 60%;
+    --accent-foreground: 0 0% 9%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 0 0% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
