@@ -7,30 +7,28 @@ export interface CompetitorVehicle {
 }
 
 /**
- * Função para buscar dados de veículos competidores
+ * Função para buscar dados de veículos competidores via backend API
+ * 
+ * Esta função consome a API Azure Function que atua como proxy seguro,
+ * protegendo as credenciais do Supabase no backend.
+ * 
  * Variáveis de ambiente esperadas:
- *  - VITE_API_URL=https://sua-api.com/inmetro_database
- *  - VITE_API_KEY=sua_chave_aqui
+ *  - VITE_API_BACKEND_URL: URL da Azure Function (ex: https://api-volvo-homecharge.azurewebsites.net/api)
+ *  - Para desenvolvimento local: http://localhost:7071/api
  */
 export async function fetchCompetitorVehicles(): Promise<CompetitorVehicle[]> {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const apiKey = import.meta.env.VITE_API_KEY;
-
-  if (!apiUrl || !apiKey) {
-    console.error('❌ Erro: Variáveis de ambiente ausentes.');
-    console.error('Verifique se VITE_API_URL e VITE_API_KEY estão configuradas no .env');
-    return [];
-  }
+  // Usar URL do backend Azure Function ou local para desenvolvimento
+  const backendUrl = import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:7071/api';
+  const apiUrl = `${backendUrl}/GetCompetitorVehicles`;
 
   try {
-    console.log('🔗 Buscando dados da API...');
+    console.log('🔗 Buscando dados da API backend...');
     console.log('URL:', apiUrl);
 
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': apiKey, // 🔑 Apenas apikey
       },
     });
 
@@ -53,7 +51,7 @@ export async function fetchCompetitorVehicles(): Promise<CompetitorVehicle[]> {
       modelo: vehicle.modelo || vehicle.Modelo || vehicle.model,
       kmLCidade: vehicle.km_l_cidade || vehicle.kmLCidade || vehicle.km_l_city || vehicle.city_km_l || vehicle.cidade,
       kmLEstrada: vehicle.km_l_estrada || vehicle.kmLEstrada || vehicle.km_l_highway || vehicle.highway_km_l || vehicle.estrada,
-      tipoCombustivel: vehicle.tipo_combustivel || vehicle.tipoCombustivel || vehicle.fuel_type || vehicle.combustivel,
+      tipoCombustivel: vehicle.tipo || vehicle.tipo_combustivel || vehicle.tipoCombustivel || vehicle.fuel_type || vehicle.combustivel,
     }));
 
     console.log('✅ Dados processados:', mappedData);
