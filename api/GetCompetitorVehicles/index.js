@@ -1,44 +1,24 @@
-import { supabase } from "./supabaseClient.js";
+// api/GetCompetitorVehicles/index.js (corrigido)
+import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
 
-module.exports = async function (context, req) {
-  if (req.method === 'GET') {
-    try {
-      const { data, error } = await supabase.from("inmetro_database").select("*");
-      if (error) throw error;
-      context.res = {
-        status: 200,
-        body: data
-      };
-    } catch (err) {
-      context.log("Erro ao buscar dados:", err.message);
-      context.res = {
-        status: 500,
-        body: { erro: err.message }
-      };
-    }
-  } else if (req.method === 'POST') {
-    try {
-      const { nome, email } = req.body;
-      const { data, error } = await supabase
-        .from("inmetro_database")
-        .insert([{ nome, email }])
-        .select();
-      if (error) throw error;
-      context.res = {
-        status: 200,
-        body: data
-      };
-    } catch (err) {
-      context.log("Erro ao inserir:", err.message);
-      context.res = {
-        status: 500,
-        body: { erro: err.message }
-      };
-    }
-  } else {
+dotenv.config();
+
+export default async function (context, req) {
+  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+
+  const { data, error } = await supabase.from("competitor_vehicles").select("*");
+
+  if (error) {
     context.res = {
-      status: 405,
-      body: { erro: "Método não suportado" }
+      status: 500,
+      body: `Erro: ${error.message}`,
     };
+    return;
   }
-};
+
+  context.res = {
+    status: 200,
+    body: data,
+  };
+}
