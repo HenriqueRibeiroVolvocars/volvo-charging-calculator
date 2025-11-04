@@ -6,7 +6,7 @@ import { UsageConfiguration } from '@/components/steps/UsageConfiguration';
 import { PricingConfiguration } from '@/components/steps/PricingConfiguration';
 import { ResultsView } from '@/components/steps/ResultsView';
 import { VolvoVehicle } from '@/data/volvoVehicles';
-import { CompetitorVehicle } from '@/data/competitorVehicles';
+import { CompetitorVehicle } from '@/data/competitorVehiclesAPI';
 import logoVolvo from '@/assets/volvo-logo.png';
 
 export type Step = 'vehicle' | 'competitor' | 'usage' | 'pricing' | 'results';

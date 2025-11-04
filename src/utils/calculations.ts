@@ -1,5 +1,5 @@
 import { VolvoVehicle } from '@/data/volvoVehicles';
-import { CompetitorVehicle } from '@/data/competitorVehicles';
+import { CompetitorVehicle } from '@/data/competitorVehiclesAPI';
 
 export interface CalculationInputs {
   volvoVehicle: VolvoVehicle;
