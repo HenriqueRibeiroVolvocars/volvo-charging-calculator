@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchCompetitorVehicles, CompetitorVehicle } from '@/data/competitorVehicles';
+import { fetchCompetitorVehicles, CompetitorVehicle } from '@/data/competitorVehiclesAPI';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

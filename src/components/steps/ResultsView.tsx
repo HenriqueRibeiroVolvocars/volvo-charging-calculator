@@ -5,7 +5,7 @@ import { ButtonDownload } from '@/components/steps/ButtonDownload';
 import { motion } from 'framer-motion';
 import { RotateCcw, Zap, Fuel, TrendingDown, Clock, Battery } from 'lucide-react';
 import { VolvoVehicle } from '@/data/volvoVehicles';
-import { CompetitorVehicle } from '@/data/competitorVehicles';
+import { CompetitorVehicle } from '@/data/competitorVehiclesAPI';
 import { calculateComparison, formatCurrency, formatNumber } from '@/utils/calculations';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
