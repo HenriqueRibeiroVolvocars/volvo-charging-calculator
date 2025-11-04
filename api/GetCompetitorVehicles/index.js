@@ -7,7 +7,7 @@ dotenv.config();
 export default async function (context, req) {
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-  const { data, error } = await supabase.from("competitor_vehicles").select("*");
+  const { data, error } = await supabase.from("inmetro_database").select("*");
 
   if (error) {
     context.res = {
