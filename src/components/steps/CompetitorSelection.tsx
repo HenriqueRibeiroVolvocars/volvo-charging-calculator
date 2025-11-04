@@ -18,12 +18,32 @@ export function CompetitorSelection({ onSelect, onBack }: CompetitorSelectionPro
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
 
+  // 🔹 Função auxiliar — pega até 2 veículos por marca, limitando a 30 no total
+  const getTopTwoPerBrand = (data: CompetitorVehicle[]): CompetitorVehicle[] => {
+    const grouped: Record<string, CompetitorVehicle[]> = {};
+
+    // Agrupa por marca
+    data.forEach((vehicle) => {
+      const marca = vehicle.marca || 'Indefinida';
+      if (!grouped[marca]) grouped[marca] = [];
+      if (grouped[marca].length < 2) grouped[marca].push(vehicle);
+    });
+
+    // Junta todos os veículos (máximo 2 por marca)
+    const limited = Object.values(grouped).flat().slice(0, 30);
+
+    return limited;
+  };
+
   useEffect(() => {
     const loadCompetitors = async () => {
       try {
         const data = await fetchCompetitorVehicles();
         setCompetitors(data);
-        setFilteredCompetitors(data.slice(0, 10)); // Mostra 10 iniciais
+
+        // 🔹 Exibe até 30 veículos (2 de cada marca)
+        const limited = getTopTwoPerBrand(data);
+        setFilteredCompetitors(limited);
       } catch (error) {
         console.error('Erro ao carregar competidores:', error);
       } finally {
@@ -34,14 +54,13 @@ export function CompetitorSelection({ onSelect, onBack }: CompetitorSelectionPro
   }, []);
 
   const handleSearch = () => {
-    // limpa os resultados anteriores enquanto busca
     setSearching(true);
     setFilteredCompetitors([]);
 
     setTimeout(() => {
       if (searchTerm.trim() === '') {
-        // Se estiver vazio, mostra os 10 primeiros
-        setFilteredCompetitors(competitors.slice(0, 10));
+        // 🔹 Caso não tenha busca, mostra 30 (2 por marca)
+        setFilteredCompetitors(getTopTwoPerBrand(competitors));
         setSearching(false);
         return;
       }
@@ -51,9 +70,11 @@ export function CompetitorSelection({ onSelect, onBack }: CompetitorSelectionPro
         comp.modelo.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
-      setFilteredCompetitors(filtered);
+      // 🔹 Mesmo após busca, respeita limite de 2 por marca
+      const limited = getTopTwoPerBrand(filtered);
+      setFilteredCompetitors(limited);
       setSearching(false);
-    }, 300); // pequena pausa visual
+    }, 300);
   };
 
   const getFuelLabel = (tipo?: string) => {
