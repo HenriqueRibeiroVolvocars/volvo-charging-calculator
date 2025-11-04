@@ -18,8 +18,8 @@ export interface CompetitorVehicle {
  */
 export async function fetchCompetitorVehicles(): Promise<CompetitorVehicle[]> {
   // Usar URL do backend Express ou variável de ambiente
-  const backendUrl = 'https://icy-field-0a4fde21e.3.azurestaticapps.net';
-  const apiUrl = `${backendUrl}/api/GetCompetitorVehicles`;
+  const backendUrl = 'https://api-volvo-homecharging-dweqdpaecqc5e6f9.centralus-01.azurewebsites.net';
+  const apiUrl = `${backendUrl}/api/clientes`;
 
   try {
     console.log('🔗 Buscando dados da API backend...');

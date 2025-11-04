@@ -22,7 +22,7 @@ export function VehicleSelection({ onSelect }: VehicleSelectionProps) {
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
         {volvoVehicles.map((vehicle, index) => (
           <motion.div
             key={vehicle.id}
@@ -54,6 +54,25 @@ export function VehicleSelection({ onSelect }: VehicleSelectionProps) {
             </Card>
           </motion.div>
         ))}
+      </div>
+
+      {/* Texto jurídico (TJ) */}
+      <div className="text-[10px] leading-tight text-muted-foreground text-justify max-w-5xl mx-auto px-4 mb-8">
+        <p className="mb-2">
+          Este material foi desenvolvido pela <span className="font-semibold text-foreground">Volvo Car Brasil</span> com o objetivo de disponibilizar ao público informações educativas e técnicas sobre consumo e eficiência energética de veículos elétricos e à combustão.
+        </p>
+        <p className="mb-2">
+          As comparações apresentadas têm caráter meramente informativo e ilustrativo, baseando-se em dados públicos do INMETRO, incluindo o Programa Brasileiro de Etiquetagem Veicular (PBEV), além de parâmetros informados pelo próprio interessado (como quilometragem diária, tarifas de energia e valores de combustíveis), que podem variar conforme cada caso.
+        </p>
+        <p className="mb-2">
+          As estimativas também podem variar conforme as condições reais de uso, região e período. As análises aqui apresentadas limitam-se a aspectos técnicos e verificáveis, sem envolver avaliação de conforto, design, desempenho ou preferências pessoais.
+        </p>
+        <p className="mb-2">
+          Este material não constitui publicidade comparativa, promessa de desempenho ou recomendação de compra, servindo apenas para auxiliar o consumidor em sua análise de forma transparente e objetiva.
+        </p>
+        <p>
+          Esta ferramenta não tem por objetivo coletar ou armazenar dados pessoais. Caso, de forma incidental, algum dado pessoal venha a ser tratado no escopo de uso deste material, tal tratamento será realizado de acordo com os princípios e bases legais previstos na <span className="font-semibold text-foreground">Lei nº 13.709/2018 (LGPD)</span>.
+        </p>
       </div>
     </div>
   );
