@@ -1,39 +1,44 @@
-// backend/index.js
-import express from "express";
-import cors from "cors";
 import { supabase } from "./supabaseClient.js";
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// Exemplo de rota GET para buscar dados do Supabase
-app.get("/api/clientes", async (req, res) => {
-  try {
-    const { data, error } = await supabase.from("inmetro_database").select("*");
-    if (error) throw error;
-    res.json(data);
-  } catch (err) {
-    console.error("Erro ao buscar dados:", err.message);
-    res.status(500).json({ erro: err.message });
+module.exports = async function (context, req) {
+  if (req.method === 'GET') {
+    try {
+      const { data, error } = await supabase.from("inmetro_database").select("*");
+      if (error) throw error;
+      context.res = {
+        status: 200,
+        body: data
+      };
+    } catch (err) {
+      context.log("Erro ao buscar dados:", err.message);
+      context.res = {
+        status: 500,
+        body: { erro: err.message }
+      };
+    }
+  } else if (req.method === 'POST') {
+    try {
+      const { nome, email } = req.body;
+      const { data, error } = await supabase
+        .from("inmetro_database")
+        .insert([{ nome, email }])
+        .select();
+      if (error) throw error;
+      context.res = {
+        status: 200,
+        body: data
+      };
+    } catch (err) {
+      context.log("Erro ao inserir:", err.message);
+      context.res = {
+        status: 500,
+        body: { erro: err.message }
+      };
+    }
+  } else {
+    context.res = {
+      status: 405,
+      body: { erro: "Método não suportado" }
+    };
   }
-});
-
-// Exemplo de rota POST para inserir dados
-app.post("/api/clientes", async (req, res) => {
-  try {
-    const { nome, email } = req.body;
-    const { data, error } = await supabase
-      .from("inmetro_database")
-      .insert([{ nome, email }])
-      .select();
-    if (error) throw error;
-    res.json(data);
-  } catch (err) {
-    console.error("Erro ao inserir:", err.message);
-    res.status(500).json({ erro: err.message });
-  }
-});
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
+};
