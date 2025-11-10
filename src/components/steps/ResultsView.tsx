@@ -195,11 +195,17 @@ export function ResultsView({
             <h4 className="font-bold text-primary">Bateria/Dia</h4>
           </div>
           <p className="text-3xl font-bold text-primary">
-            {formatNumber(results.ev.dailyBatteryPercent, 1)}%
+            {results.ev.exceededElectricRange 
+              ? `100% + ${formatNumber(results.ev.extraKm, 0)} km`
+              : `${formatNumber(results.ev.dailyBatteryPercent, 1)}%`
+            }
           </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            {formatNumber(results.ev.dailyEnergy, 1)} kWh consumidos
-          </p>
+          <div className="text-xs text-muted-foreground mt-2 space-y-1">
+            <p>{formatNumber(results.ev.dailyEnergy, 1)} kWh consumidos</p>
+            {results.ev.fuelLitersUsed > 0 && (
+              <p>{formatNumber(results.ev.fuelLitersUsed, 1)} litros consumidos</p>
+            )}
+          </div>
         </Card>
       </div>
 

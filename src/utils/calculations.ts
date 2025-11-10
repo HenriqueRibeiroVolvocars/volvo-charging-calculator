@@ -27,6 +27,9 @@ export interface CalculationResults {
     weeklyBatteryPercent: number;
     dailyChargingTime: number;
     chargesFitsWindow: boolean;
+    exceededElectricRange: boolean;
+    extraKm: number;
+    fuelLitersUsed: number;
   };
   ice: {
     litersPer100KmCity: number;
@@ -65,9 +68,15 @@ export function calculateComparison(inputs: CalculationInputs): CalculationResul
   let dailyEnergy = 0;
   let dailyBatteryPercent = 0;
   let dailyChargingTime = 0;
+  let exceededElectricRange = false;
+  let extraKm = 0;
+  let fuelLitersUsed = 0;
   
   // Se é híbrido plug-in E roda mais que a autonomia elétrica
   if (inputs.volvoVehicle.isPlugInHybrid && inputs.dailyKm > volvoElectricRange) {
+    exceededElectricRange = true;
+    extraKm = inputs.dailyKm - volvoElectricRange;
+    
     // Parte elétrica
     const electricKm = volvoElectricRange;
     const electricEnergy = (electricKm * kwhPerKm) / efficiency;
@@ -83,9 +92,10 @@ export function calculateComparison(inputs: CalculationInputs): CalculationResul
     const combustionLiters = (combustionKm / 100) * litersPer100KmAvg;
     const combustionCost = combustionLiters * inputs.fuelPricePerLiter;
     
+    fuelLitersUsed = combustionLiters;
     evDailyCost = electricCost + combustionCost;
     dailyEnergy = electricEnergy;
-    dailyBatteryPercent = (electricEnergy / inputs.volvoVehicle.batteryCapacity) * 100;
+    dailyBatteryPercent = 100; // Limita a 100%
     dailyChargingTime = electricEnergy / inputs.chargingPowerKw;
   } else {
     // 100% elétrico ou híbrido rodando apenas no elétrico
@@ -158,7 +168,10 @@ export function calculateComparison(inputs: CalculationInputs): CalculationResul
       dailyBatteryPercent,
       weeklyBatteryPercent: dailyBatteryPercent * 7,
       dailyChargingTime,
-      chargesFitsWindow
+      chargesFitsWindow,
+      exceededElectricRange,
+      extraKm,
+      fuelLitersUsed
     },
     ice: {
       litersPer100KmCity,
