@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste API Supabase</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 3px; width: 300px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste da API Supabase</h1>
+        
+        <div class="test-section info">
+            <h3>📝 Configuração</h3>
+            <p>Insira suas credenciais do Supabase:</p>
+            <input type="text" id="supabaseUrl" placeholder="URL do Supabase (ex: https://xxx.supabase.co)" />
+            <br>
+            <input type="text" id="supabaseKey" placeholder="Chave Anônima do Supabase" />
+            <br>
+            <button onclick="testConnection()">🔗 Testar Conexão</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let supabase = null;
+
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-section ${type}`;
+            div.innerHTML = `<pre>${message}</pre>`;
+            results.appendChild(div);
+        }
+
+        async function testConnection() {
+            const url = document.getElementById('supabaseUrl').value;
+            const key = document.getElementById('supabaseKey').value;
+
+            if (!url || !key) {
+                log('❌ Por favor, preencha URL e Chave do Supabase', 'error');
+                return;
+            }
+
+            try {
+                // Limpar resultados anteriores
+                document.getElementById('results').innerHTML = '';
+
+                // Criar cliente Supabase
+                supabase = window.supabase.createClient(url, key);
+                log('✅ Cliente Supabase criado com sucesso!', 'success');
+
+                // Teste 1: Listar tabelas
+                log('🔍 Teste 1: Listando tabelas disponíveis...');
+                try {
+                    const { data: tables, error } = await supabase
+                        .from('information_schema.tables')
+                        .select('table_name')
+                        .eq('table_schema', 'public');
+                    
+                    if (error) {
+                        log(`❌ Erro ao listar tabelas: ${error.message}`, 'error');
+                    } else {
+                        const tableNames = tables?.map(t => t.table_name) || [];
+                        log(`✅ Tabelas encontradas: ${tableNames.join(', ')}`, 'success');
+                    }
+                } catch (err) {
+                    log(`❌ Erro ao acessar information_schema: ${err.message}`, 'error');
+                }
+
+                // Teste 2: Buscar dados da tabela inmetro_database
+                log('🚗 Teste 2: Buscando dados da tabela inmetro_database...');
+                try {
+                    const { data: vehicles, error } = await supabase
+                        .from('inmetro_database')
+                        .select('*')
+                        .limit(3);
+                    
+                    if (error) {
+                        log(`❌ Erro ao buscar veículos: ${error.message}`, 'error');
+                        log('💡 Verifique se a tabela "inmetro_database" existe e tem dados', 'info');
+                    } else {
+                        log(`✅ Dados encontrados: ${vehicles?.length || 0} registros`, 'success');
+                        if (vehicles && vehicles.length > 0) {
+                            log(`📊 Primeiro registro: ${JSON.stringify(vehicles[0], null, 2)}`, 'info');
+                            log(`🔍 Colunas disponíveis: ${Object.keys(vehicles[0]).join(', ')}`, 'info');
+                        }
+                    }
+                } catch (err) {
+                    log(`❌ Erro ao buscar dados: ${err.message}`, 'error');
+                }
+
+                // Teste 3: Testar diferentes nomes de tabela
+                log('🔍 Teste 3: Testando diferentes nomes de tabela...');
+                const possibleTableNames = [
+                    'inmetro_database',
+                    'competitor_vehicles',
+                    'competitorVehicles', 
+                    'vehicles',
+                    'carros',
+                    'competitors'
+                ];
+
+                for (const tableName of possibleTableNames) {
+                    try {
+                        const { data, error } = await supabase
+                            .from(tableName)
+                            .select('*')
+                            .limit(1);
+                        
+                        if (!error && data && data.length > 0) {
+                            log(`✅ Tabela "${tableName}" encontrada!`, 'success');
+                            log(`📊 Colunas: ${Object.keys(data[0]).join(', ')}`, 'info');
+                            break;
+                        }
+                    } catch (err) {
+                        // Ignorar erros de tabelas que não existem
+                    }
+                }
+
+                log('🏁 Teste concluído!', 'success');
+
+            } catch (error) {
+                log(`💥 Erro geral: ${error.message}`, 'error');
+            }
+        }
+
+        // Teste automático ao carregar a página
+        window.onload = function() {
+            log('🚀 Página carregada. Configure suas credenciais e clique em "Testar Conexão"', 'info');
+        };
+    </script>
+</body>
+</html>

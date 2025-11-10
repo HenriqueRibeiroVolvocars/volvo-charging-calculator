@@ -60,7 +60,7 @@ export function PricingConfiguration({
       <Button
         variant="ghost"
         onClick={onBack}
-        className="mb-8 text-primary hover:text-accent"
+        className="mb-8 text-primary"
       >
         <ArrowLeft className="mr-2 h-5 w-5" />
         Voltar

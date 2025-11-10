@@ -1,73 +1,258 @@
-# Welcome to your Lovable project
+# Volvo Home Charge 🚗⚡
 
-## Project info
+Aplicação web para comparar custos entre veículos elétricos Volvo e veículos a combustão, desenvolvida para demonstrar as vantagens do carregamento doméstico.
 
-**URL**: https://lovable.dev/projects/c4dd1fdf-b0c3-4135-9ea6-e2e36fc6f800
+## 🏗️ Arquitetura
 
-## How can I edit this code?
+```
+┌─────────────────────┐
+│   Frontend (React)  │ ← Interage com usuário
+│   Azure Static Web  │
+└──────────┬──────────┘
+           │
+           │ HTTP Request
+           ▼
+┌─────────────────────────────┐
+│   Backend API (Azure Func)  │ ← Proxy seguro
+│   /api/GetCompetitorVehicles│
+└──────────┬──────────────────┘
+           │
+           │ API Request (com credenciais)
+           ▼
+┌─────────────────────────────┐
+│      Supabase Database      │ ← Banco de dados
+│    Tabela: inmetro_database │
+└─────────────────────────────┘
+```
 
-There are several ways of editing your application.
+### 🔐 Segurança
 
-**Use Lovable**
+- ✅ **Credenciais protegidas**: Chaves do Supabase nunca expostas no frontend
+- ✅ **API Gateway**: Azure Function atua como proxy seguro
+- ✅ **CORS configurado**: Comunicação segura entre frontend e backend
+- ✅ **Variáveis de ambiente**: Configurações sensíveis isoladas
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c4dd1fdf-b0c3-4135-9ea6-e2e36fc6f800) and start prompting.
+## 🚀 Quick Start
 
-Changes made via Lovable will be committed automatically to this repo.
+### Pré-requisitos
 
-**Use your preferred IDE**
+- Node.js 18+ ou 20+
+- Conta no Azure com:
+  - Azure Functions
+  - Azure Static Web Apps
+  - Storage Account (opcional)
+- Conta no Supabase com projeto configurado
+- Azure Functions Core Tools
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 1️⃣ Configuração Local
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+#### Backend
 
-Follow these steps:
+```bash
+cd api
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Instalar dependências
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Configurar credenciais
+cp local.settings.json.example local.settings.json
+# Edite local.settings.json com suas credenciais do Supabase
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Executar localmente
+func start
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+Backend rodando em: `http://localhost:7071/api/GetCompetitorVehicles`
+
+#### Frontend
+
+```bash
+# Na raiz do projeto
+
+# Criar arquivo .env
+echo "VITE_API_BACKEND_URL=http://localhost:7071/api" > .env
+
+# Instalar dependências
+npm install
+
+# Executar em desenvolvimento
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Frontend rodando em: `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 2️⃣ Deploy no Azure
 
-**Use GitHub Codespaces**
+#### Backend (Azure Functions)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+cd api
 
-## What technologies are used for this project?
+# Login no Azure
+az login
 
-This project is built with:
+# Criar Resource Group
+az group create --name rg-volvo-homecharge --location eastus
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Criar Storage Account
+az storage account create \
+  --name storagevolvohomecharge \
+  --resource-group rg-volvo-homecharge \
+  --sku Standard_LRS
 
-## How can I deploy this project?
+# Criar Function App
+az functionapp create \
+  --resource-group rg-volvo-homecharge \
+  --consumption-plan-location eastus \
+  --runtime node \
+  --runtime-version 20 \
+  --functions-version 4 \
+  --name api-volvo-homecharge \
+  --storage-account storagevolvohomecharge
 
-Simply open [Lovable](https://lovable.dev/projects/c4dd1fdf-b0c3-4135-9ea6-e2e36fc6f800) and click on Share -> Publish.
+# Configurar variáveis de ambiente
+az functionapp config appsettings set \
+  --name api-volvo-homecharge \
+  --resource-group rg-volvo-homecharge \
+  --settings \
+    SUPABASE_URL="https://seu-projeto.supabase.co" \
+    SUPABASE_ANON_KEY="sua-chave-anonima" \
+    SUPABASE_TABLE_NAME="inmetro_database"
 
-## Can I connect a custom domain to my Lovable project?
+# Deploy
+func azure functionapp publish api-volvo-homecharge
+```
 
-Yes, you can!
+#### Frontend (Azure Static Web Apps)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. No Azure Portal, criar novo Static Web App
+2. Conectar ao repositório GitHub
+3. Configurar build:
+   - **App location**: `/`
+   - **Api location**: `/api`
+   - **Output location**: `dist`
+4. Adicionar variável de ambiente:
+   - `VITE_API_BACKEND_URL`: URL da Azure Function
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 📁 Estrutura do Projeto
+
+```
+.
+├── api/                              # Backend Azure Functions
+│   ├── GetCompetitorVehicles/       # Função HTTP
+│   │   ├── function.json
+│   │   └── index.js
+│   ├── host.json                    # Configuração global
+│   ├── local.settings.json.example  # Template de configuração
+│   ├── package.json
+│   ├── README.md                    # Docs da API
+│   └── DEVELOPMENT.md               # Guia de desenvolvimento
+├── src/                             # Frontend React
+│   ├── components/                  # Componentes UI
+│   │   ├── steps/                  # Steps do wizard
+│   │   └── ui/                     # Shadcn components
+│   ├── data/                       # Dados e APIs
+│   ├── pages/                      # Páginas
+│   └── utils/                      # Utilitários
+├── public/                         # Assets estáticos
+├── .github/workflows/              # CI/CD
+│   └── deploy-api.yml
+├── README.md                       # Este arquivo
+└── package.json
+
+```
+
+## 🔧 Tecnologias
+
+### Frontend
+- **React 18** - Framework UI
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **TailwindCSS** - Styling
+- **Shadcn/UI** - Component library
+- **Framer Motion** - Animações
+- **Recharts** - Gráficos
+- **React Router** - Navegação
+
+### Backend
+- **Azure Functions** - Serverless API
+- **Node.js 20** - Runtime
+- **Supabase** - Database (via REST API)
+
+### Infraestrutura
+- **Azure Static Web Apps** - Hosting frontend
+- **Azure Functions** - Backend API
+- **GitHub Actions** - CI/CD
+- **Supabase** - PostgreSQL database
+
+## 📊 Fluxo de Dados
+
+1. Usuário acessa a aplicação
+2. Seleciona veículo Volvo elétrico
+3. Busca veículo competidor a combustão via API backend
+4. Configura parâmetros de uso (km/dia, % cidade/estrada)
+5. Define preços (energia, combustível, etc.)
+6. Visualiza comparação de custos
+7. Pode exportar resultados em PDF
+
+## 🔍 Dados Utilizados
+
+### Volvo (Frontend)
+- Dados hardcoded em `src/data/volvoVehicles.ts`
+
+### Competidores (Supabase)
+- Fonte: INMETRO
+- Tabela: `inmetro_database`
+- Campos: marca, modelo, consumo cidade/estrada, tipo combustível
+
+## 📝 Variáveis de Ambiente
+
+### Backend
+
+Ver: `api/ENV_VARIABLES.md`
+
+| Variável | Descrição |
+|----------|-----------|
+| `SUPABASE_URL` | URL do projeto Supabase |
+| `SUPABASE_ANON_KEY` | Chave anônima do Supabase |
+| `SUPABASE_TABLE_NAME` | Nome da tabela (opcional) |
+
+### Frontend
+
+| Variável | Descrição |
+|----------|-----------|
+| `VITE_API_BACKEND_URL` | URL da Azure Function |
+
+## 🧪 Testes
+
+```bash
+# Backend
+cd api
+curl http://localhost:7071/api/GetCompetitorVehicles
+
+# Frontend
+npm run dev
+# Abra http://localhost:8080
+```
+
+## 📚 Documentação Adicional
+
+- [API Backend](api/README.md) - Documentação da API
+- [Desenvolvimento](api/DEVELOPMENT.md) - Guia de dev
+- [Variáveis de Ambiente](api/ENV_VARIABLES.md) - Configuração de env vars
+
+## 🤝 Contribuição
+
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto é proprietário da Volvo Cars.
+
+---
+
+Desenvolvido com ❤️ para demonstrar as vantagens do carregamento elétrico doméstico.
