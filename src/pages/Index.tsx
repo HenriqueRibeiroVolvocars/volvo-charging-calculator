@@ -6,7 +6,8 @@ import { UsageConfiguration } from '@/components/steps/UsageConfiguration';
 import { PricingConfiguration } from '@/components/steps/PricingConfiguration';
 import { ResultsView } from '@/components/steps/ResultsView';
 import { VolvoVehicle } from '@/data/volvoVehicles';
-import { CompetitorVehicle } from '@/data/competitorVehicles';
+import { CompetitorVehicle } from '@/data/competitorVehiclesAPI';
+import logoVolvo from '@/assets/volvo-logo.png';
 
 export type Step = 'vehicle' | 'competitor' | 'usage' | 'pricing' | 'results';
 
@@ -47,13 +48,14 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-background">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-sm shadow-lg">
-        <div className="container mx-auto px-6 py-6">
-          <h1 className="text-3xl font-bold text-primary-foreground tracking-wide">
-            VOLVO HOME CHARGE
-          </h1>
-          <p className="text-sm text-primary-foreground/80 mt-1">
-            Comparativo de custos: Elétrico vs Combustão
-          </p>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <img src={logoVolvo} alt="Volvo" className="h-8 md:h-10" />
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold text-white">Home Charge</h1>
+              <p className="text-white/90 text-sm hidden md:block">Calculadora de Carregamento Doméstico</p>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -86,7 +88,6 @@ const Index = () => {
               transition={{ duration: 0.3 }}
             >
               <CompetitorSelection
-                volvoCategory={appState.selectedVolvo.category}
                 onSelect={(competitor) => {
                   updateState({ selectedCompetitor: competitor });
                   goToStep('usage');

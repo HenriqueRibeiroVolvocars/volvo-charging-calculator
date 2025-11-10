@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { RotateCcw, Zap, Fuel, TrendingDown, Clock, Battery } from 'lucide-react';
 import { VolvoVehicle } from '@/data/volvoVehicles';
-import { CompetitorVehicle } from '@/data/competitorVehicles';
+import { CompetitorVehicle } from '@/data/competitorVehiclesAPI';
 import { calculateComparison, formatCurrency, formatNumber } from '@/utils/calculations';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -76,7 +76,7 @@ export function ResultsView({
   ];
 
   return (
-    <div className="container mx-auto max-w-7xl">
+    <div id="results-container" className="container mx-auto max-w-7xl">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
