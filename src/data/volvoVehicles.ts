@@ -55,12 +55,12 @@ export const volvoVehicles: VolvoVehicle[] = [
     name: 'XC60',
     displayName: 'Volvo XC60 PHEV',
     batteryCapacity: 18.8,
-    autonomy: 85, // Autonomia elétrica
+    autonomy: 48, // Autonomia elétrica
     priceRange: '460-540k',
     image: xc60Image,
     category: 'linha60',
-    kmLCidade: 6.5, // Consumo em modo híbrido cidade
-    kmLEstrada: 7.0, // Consumo em modo híbrido estrada
+    kmLCidade: 9.5, // Consumo em modo híbrido cidade
+    kmLEstrada: 9.4, // Consumo em modo híbrido estrada
     isPlugInHybrid: true
   },
   {
@@ -68,12 +68,12 @@ export const volvoVehicles: VolvoVehicle[] = [
     name: 'XC90',
     displayName: 'Volvo XC90 PHEV',
     batteryCapacity: 18.8,
-    autonomy: 85, // Autonomia elétrica
+    autonomy: 47, // Autonomia elétrica
     priceRange: '680-850k',
     image: xc90Image,
     category: 'linha90',
-    kmLCidade: 6.0, // Consumo em modo híbrido cidade
-    kmLEstrada: 6.5, // Consumo em modo híbrido estrada
+    kmLCidade: 9.4, // Consumo em modo híbrido cidade
+    kmLEstrada: 9.3, // Consumo em modo híbrido estrada
     isPlugInHybrid: true
   },
   {
