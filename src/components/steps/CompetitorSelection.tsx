@@ -167,12 +167,23 @@ export function CompetitorSelection({ onSelect, onBack }: CompetitorSelectionPro
                     {getFuelLabel(competitor.tipoCombustivel)}
                   </span>
                 </div>
-                <div className="flex gap-4 text-xs text-muted-foreground">
-                  <div>
-                    <span className="font-semibold text-foreground">{competitor.kmLCidade}</span> km/l cidade
-                  </div>
-                  <div>
-                    <span className="font-semibold text-foreground">{competitor.kmLEstrada}</span> km/l estrada
+                <div className="flex flex-col gap-2 text-xs text-muted-foreground">
+                  {competitor.kmEletrico && competitor.kmEletrico > 0 && (
+                    <div>
+                      <span className="font-semibold text-foreground">Autonomia elétrica:</span> {competitor.kmEletrico} km
+                    </div>
+                  )}
+                  <div className="flex gap-4">
+                    {competitor.kmLCidade > 0 && (
+                      <div>
+                        <span className="font-semibold text-foreground">{competitor.kmLCidade}</span> km/l cidade
+                      </div>
+                    )}
+                    {competitor.kmLEstrada > 0 && (
+                      <div>
+                        <span className="font-semibold text-foreground">{competitor.kmLEstrada}</span> km/l estrada
+                      </div>
+                    )}
                   </div>
                 </div>
               </Card>
