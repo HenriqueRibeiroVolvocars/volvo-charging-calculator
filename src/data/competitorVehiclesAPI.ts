@@ -25,19 +25,13 @@ export async function fetchCompetitorVehicles(): Promise<CompetitorVehicle[]> {
 
   try {
     console.log('🔗 Buscando dados da API...');
-    console.log('URL (base):', apiUrl);
+    console.log('URL:', apiUrl);
 
-    // Supabase REST requer query ?select=*
-    const finalUrl = apiUrl.includes('select=')
-      ? apiUrl
-      : `${apiUrl}${apiUrl.includes('?') ? '&' : '?'}select=*`;
-
-    const response = await fetch(finalUrl, {
+    const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        apikey: apiKey,
-        Authorization: `Bearer ${apiKey}`,
+        'apikey': apiKey, // 🔑 Apenas apikey
       },
     });
 
