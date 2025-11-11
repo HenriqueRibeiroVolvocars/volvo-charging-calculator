@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { VehicleSelection } from '@/components/steps/VehicleSelection';
 import { CompetitorSelection } from '@/components/steps/CompetitorSelection';
@@ -43,6 +43,11 @@ const Index = () => {
   const goToStep = (step: Step) => {
     setAppState(prev => ({ ...prev, step }));
   };
+
+  // Scroll to top when step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [appState.step]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-background">

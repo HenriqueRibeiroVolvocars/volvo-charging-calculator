@@ -47,8 +47,17 @@ export function VehicleSelection({ onSelect }: VehicleSelectionProps) {
                 </h3>
                 <div className="space-y-2 text-muted-foreground">
                   <p className="text-sm">
-                    <span className="font-semibold text-foreground">{vehicle.batteryCapacity} kWh</span> • {vehicle.autonomy} km
+                    <span className="font-semibold text-foreground">{vehicle.batteryCapacity} kWh</span>
                   </p>
+                  <p className="text-sm">
+                    <span className="font-semibold text-foreground">Autonomia elétrica:</span> {vehicle.autonomy} km
+                  </p>
+                  {vehicle.isPlugInHybrid && (
+                    <div className="text-xs pt-2 border-t">
+                      <p><span className="font-semibold text-foreground">Cidade:</span> {vehicle.kmLCidade} km/l</p>
+                      <p><span className="font-semibold text-foreground">Estrada:</span> {vehicle.kmLEstrada} km/l</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>

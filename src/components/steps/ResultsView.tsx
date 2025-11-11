@@ -48,31 +48,34 @@ export function ResultsView({
     });
   }, [volvoVehicle, competitor, dailyKm, cityPercent, highwayPercent, energyPrice, fuelPrice, chargingPower, chargingWindow]);
 
+  const volvoLabel = volvoVehicle.displayName;
+  const competitorLabel = `${competitor.marca} ${competitor.modelo}`;
+
   const chartData = [
     { 
       year: '1 ano', 
-      'Elétrico': results.cumulativeCosts.year1.ev,
-      'Combustão': results.cumulativeCosts.year1.ice
+      [volvoLabel]: results.cumulativeCosts.year1.ev,
+      [competitorLabel]: results.cumulativeCosts.year1.ice
     },
     { 
       year: '2 anos', 
-      'Elétrico': results.cumulativeCosts.year2.ev,
-      'Combustão': results.cumulativeCosts.year2.ice
+      [volvoLabel]: results.cumulativeCosts.year2.ev,
+      [competitorLabel]: results.cumulativeCosts.year2.ice
     },
     { 
       year: '3 anos', 
-      'Elétrico': results.cumulativeCosts.year3.ev,
-      'Combustão': results.cumulativeCosts.year3.ice
+      [volvoLabel]: results.cumulativeCosts.year3.ev,
+      [competitorLabel]: results.cumulativeCosts.year3.ice
     },
     { 
       year: '4 anos', 
-      'Elétrico': results.cumulativeCosts.year4.ev,
-      'Combustão': results.cumulativeCosts.year4.ice
+      [volvoLabel]: results.cumulativeCosts.year4.ev,
+      [competitorLabel]: results.cumulativeCosts.year4.ice
     },
     { 
       year: '5 anos', 
-      'Elétrico': results.cumulativeCosts.year5.ev,
-      'Combustão': results.cumulativeCosts.year5.ice
+      [volvoLabel]: results.cumulativeCosts.year5.ev,
+      [competitorLabel]: results.cumulativeCosts.year5.ice
     }
   ];
 
@@ -195,11 +198,17 @@ export function ResultsView({
             <h4 className="font-bold text-primary">Bateria/Dia</h4>
           </div>
           <p className="text-3xl font-bold text-primary">
-            {formatNumber(results.ev.dailyBatteryPercent, 1)}%
+            {results.ev.exceededElectricRange 
+              ? `100% + ${formatNumber(results.ev.extraKm, 0)} km`
+              : `${formatNumber(results.ev.dailyBatteryPercent, 1)}%`
+            }
           </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            {formatNumber(results.ev.dailyEnergy, 1)} kWh consumidos
-          </p>
+          <div className="text-xs text-muted-foreground mt-2 space-y-1">
+            <p>{formatNumber(results.ev.dailyEnergy, 1)} kWh consumidos</p>
+            {results.ev.fuelLitersUsed > 0 && (
+              <p>{formatNumber(results.ev.fuelLitersUsed, 1)} litros consumidos</p>
+            )}
+          </div>
         </Card>
       </div>
 
@@ -207,7 +216,7 @@ export function ResultsView({
       <Card className="p-8 shadow-soft mb-8">
         <h3 className="text-2xl font-bold text-primary mb-2">Custos Acumulados ao Longo do Tempo</h3>
         <p className="text-sm text-muted-foreground mb-6">
-          Comparação dos custos totais entre elétrico e combustão
+          Comparação dos custos totais entre {volvoVehicle.displayName} e {competitor.marca} {competitor.modelo}
         </p>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
@@ -233,7 +242,7 @@ export function ResultsView({
             <Legend />
             <Line 
               type="monotone" 
-              dataKey="Elétrico" 
+              dataKey={volvoLabel} 
               stroke="hsl(var(--primary))" 
               strokeWidth={3}
               dot={{ fill: 'hsl(var(--primary))', r: 6 }}
@@ -241,7 +250,7 @@ export function ResultsView({
             />
             <Line 
               type="monotone" 
-              dataKey="Combustão" 
+              dataKey={competitorLabel} 
               stroke="hsl(var(--muted-foreground))" 
               strokeWidth={3}
               dot={{ fill: 'hsl(var(--muted-foreground))', r: 6 }}

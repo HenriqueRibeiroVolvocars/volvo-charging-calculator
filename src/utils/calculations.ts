@@ -27,6 +27,9 @@ export interface CalculationResults {
     weeklyBatteryPercent: number;
     dailyChargingTime: number;
     chargesFitsWindow: boolean;
+    exceededElectricRange: boolean;
+    extraKm: number;
+    fuelLitersUsed: number;
   };
   ice: {
     litersPer100KmCity: number;
@@ -56,24 +59,98 @@ export interface CalculationResults {
 export function calculateComparison(inputs: CalculationInputs): CalculationResults {
   const efficiency = inputs.chargingEfficiency || 0.90;
   
-  // EV Calculations
-  const kmPerKwh = inputs.volvoVehicle.autonomy / inputs.volvoVehicle.batteryCapacity;
+  // === CÁLCULO VOLVO (EV ou PHEV) ===
+  const volvoElectricRange = inputs.volvoVehicle.autonomy; // km elétricos
+  const kmPerKwh = volvoElectricRange / inputs.volvoVehicle.batteryCapacity;
   const kwhPerKm = 1 / kmPerKwh;
-  const dailyEnergy = (inputs.dailyKm * kwhPerKm) / efficiency;
-  const evDailyCost = dailyEnergy * inputs.energyPriceKwh;
-  const dailyBatteryPercent = (dailyEnergy / inputs.volvoVehicle.batteryCapacity) * 100;
-  const dailyChargingTime = dailyEnergy / inputs.chargingPowerKw;
+  
+  let evDailyCost = 0;
+  let dailyEnergy = 0;
+  let dailyBatteryPercent = 0;
+  let dailyChargingTime = 0;
+  let exceededElectricRange = false;
+  let extraKm = 0;
+  let fuelLitersUsed = 0;
+  
+  // Se é híbrido plug-in E roda mais que a autonomia elétrica
+  if (inputs.volvoVehicle.isPlugInHybrid && inputs.dailyKm > volvoElectricRange) {
+    exceededElectricRange = true;
+    extraKm = inputs.dailyKm - volvoElectricRange;
+    
+    // Parte elétrica
+    const electricKm = volvoElectricRange;
+    const electricEnergy = (electricKm * kwhPerKm) / efficiency;
+    const electricCost = electricEnergy * inputs.energyPriceKwh;
+    
+    // Parte combustão
+    const combustionKm = inputs.dailyKm - volvoElectricRange;
+    const litersPer100KmCity = inputs.volvoVehicle.kmLCidade ? 100 / inputs.volvoVehicle.kmLCidade : 0;
+    const litersPer100KmHighway = inputs.volvoVehicle.kmLEstrada ? 100 / inputs.volvoVehicle.kmLEstrada : 0;
+    const litersPer100KmAvg = 
+      (inputs.cityPercent / 100 * litersPer100KmCity) + 
+      (inputs.highwayPercent / 100 * litersPer100KmHighway);
+    const combustionLiters = (combustionKm / 100) * litersPer100KmAvg;
+    const combustionCost = combustionLiters * inputs.fuelPricePerLiter;
+    
+    fuelLitersUsed = combustionLiters;
+    evDailyCost = electricCost + combustionCost;
+    dailyEnergy = electricEnergy;
+    dailyBatteryPercent = 100; // Limita a 100%
+    dailyChargingTime = electricEnergy / inputs.chargingPowerKw;
+  } else {
+    // 100% elétrico ou híbrido rodando apenas no elétrico
+    dailyEnergy = (inputs.dailyKm * kwhPerKm) / efficiency;
+    evDailyCost = dailyEnergy * inputs.energyPriceKwh;
+    dailyBatteryPercent = (dailyEnergy / inputs.volvoVehicle.batteryCapacity) * 100;
+    dailyChargingTime = dailyEnergy / inputs.chargingPowerKw;
+  }
+  
   const chargesFitsWindow = dailyChargingTime <= inputs.chargingWindow;
 
-  // ICE Calculations
-  const litersPer100KmCity = 100 / inputs.competitor.kmLCidade;
-  const litersPer100KmHighway = 100 / inputs.competitor.kmLEstrada;
-  const litersPer100KmAvg = 
-    (inputs.cityPercent / 100 * litersPer100KmCity) + 
-    (inputs.highwayPercent / 100 * litersPer100KmHighway);
+  // === CÁLCULO COMPETIDOR (ICE, PHEV ou EV) ===
+  let iceDailyCost = 0;
+  let dailyLiters = 0;
+  let litersPer100KmCity = 0;
+  let litersPer100KmHighway = 0;
+  let litersPer100KmAvg = 0;
   
-  const dailyLiters = (inputs.dailyKm / 100) * litersPer100KmAvg;
-  const iceDailyCost = dailyLiters * inputs.fuelPricePerLiter;
+  const competitorElectricRange = inputs.competitor.kmEletrico || 0;
+  
+  // Se o competidor tem autonomia elétrica E roda mais que ela
+  if (competitorElectricRange > 0 && inputs.dailyKm > competitorElectricRange) {
+    // Parte elétrica do competidor
+    const electricKm = competitorElectricRange;
+    // Estimativa: assumimos eficiência similar (ajustar se houver dados reais)
+    const competitorKwhPerKm = kwhPerKm; // simplificação
+    const electricEnergy = (electricKm * competitorKwhPerKm) / efficiency;
+    const electricCost = electricEnergy * inputs.energyPriceKwh;
+    
+    // Parte combustão do competidor
+    const combustionKm = inputs.dailyKm - competitorElectricRange;
+    litersPer100KmCity = inputs.competitor.kmLCidade > 0 ? 100 / inputs.competitor.kmLCidade : 0;
+    litersPer100KmHighway = inputs.competitor.kmLEstrada > 0 ? 100 / inputs.competitor.kmLEstrada : 0;
+    litersPer100KmAvg = 
+      (inputs.cityPercent / 100 * litersPer100KmCity) + 
+      (inputs.highwayPercent / 100 * litersPer100KmHighway);
+    dailyLiters = (combustionKm / 100) * litersPer100KmAvg;
+    const combustionCost = dailyLiters * inputs.fuelPricePerLiter;
+    
+    iceDailyCost = electricCost + combustionCost;
+  } else if (competitorElectricRange > 0 && inputs.dailyKm <= competitorElectricRange) {
+    // Competidor roda 100% elétrico
+    const electricEnergy = (inputs.dailyKm * kwhPerKm) / efficiency;
+    iceDailyCost = electricEnergy * inputs.energyPriceKwh;
+    dailyLiters = 0;
+  } else {
+    // Competidor 100% combustão
+    litersPer100KmCity = inputs.competitor.kmLCidade > 0 ? 100 / inputs.competitor.kmLCidade : 0;
+    litersPer100KmHighway = inputs.competitor.kmLEstrada > 0 ? 100 / inputs.competitor.kmLEstrada : 0;
+    litersPer100KmAvg = 
+      (inputs.cityPercent / 100 * litersPer100KmCity) + 
+      (inputs.highwayPercent / 100 * litersPer100KmHighway);
+    dailyLiters = (inputs.dailyKm / 100) * litersPer100KmAvg;
+    iceDailyCost = dailyLiters * inputs.fuelPricePerLiter;
+  }
 
   const yearlySavings = (iceDailyCost - evDailyCost) * 365;
   const evYearlyCost = evDailyCost * 365;
@@ -91,7 +168,10 @@ export function calculateComparison(inputs: CalculationInputs): CalculationResul
       dailyBatteryPercent,
       weeklyBatteryPercent: dailyBatteryPercent * 7,
       dailyChargingTime,
-      chargesFitsWindow
+      chargesFitsWindow,
+      exceededElectricRange,
+      extraKm,
+      fuelLitersUsed
     },
     ice: {
       litersPer100KmCity,
