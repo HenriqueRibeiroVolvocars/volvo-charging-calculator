@@ -9,6 +9,8 @@ import { deduplicateVehicles } from '@/utils/vehicleDeduplication';
 import { sortBrandsByTier } from '@/constants/brandOrder';
 import { getBrandLogo } from '@/utils/brandLogos';
 
+// Selection of competitor vehicles component
+
 interface CompetitorSelectionProps {
   onSelect: (competitor: CompetitorVehicle) => void;
   onBack: () => void;
