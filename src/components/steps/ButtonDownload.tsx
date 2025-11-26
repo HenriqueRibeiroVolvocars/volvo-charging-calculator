@@ -6,7 +6,7 @@ import jsPDF from "jspdf";
 export function ButtonDownload() {
   const handleDownloadPDF = async () => {
     try {
-      const element = document.getElementById("results-container");
+      const element = document.getElementById("pdf-container");
       const buttonSection = document.querySelector("#results-container .flex.items-center.gap-4.mb-8");
 
       if (!element) {

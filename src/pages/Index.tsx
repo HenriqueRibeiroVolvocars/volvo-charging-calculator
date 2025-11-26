@@ -50,28 +50,37 @@ const Index = () => {
   }, [appState.step]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-background" id="pdf-container">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-sm shadow-lg">
         <div className="container mx-auto px-6 py-6">
-          {/* Grupo logo + título */}
-          <div className="flex items-center gap-3">
-            <img
-              src={logoVolvo}
-              alt="Volvo Logo"
-              className="w-10 h-10"
-            />
-            <h1 className="text-3xl font-bold text-primary-foreground tracking-wide">
-              VOLVO ELECTRIC COMPARISON
-            </h1>
+          
+          <div className="grid grid-cols-[auto_1fr] gap-4 items-center">
+            
+            {/* Coluna 1 — LOGO */}
+            <div className="flex justify-center">
+              <img
+                src={logoVolvo}
+                alt="Volvo Logo"
+                className="w-12 h-12"
+              />
+            </div>
+
+            {/* Coluna 2 — Título + Subtítulo */}
+            <div className="flex flex-col">
+              <h1 className="text-3xl font-bold text-primary-foreground tracking-wide">
+                VOLVO ELECTRIC COMPARISON
+              </h1>
+              <p className="text-sm text-primary-foreground/80">
+                Comparativo de custos: Elétrico vs Combustão
+              </p>
+            </div>
+
           </div>
 
-          {/* Subtítulo só abaixo do texto */}
-          <p className="text-sm text-primary-foreground/80 mt-2 ml-[55px]">
-            Comparativo de custos: Elétrico vs Combustão
-          </p>
         </div>
       </header>
+
 
       {/* Main Content */}
       <main className="pt-32 pb-20 px-4">
