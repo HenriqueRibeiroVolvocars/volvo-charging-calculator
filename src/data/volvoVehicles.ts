@@ -43,7 +43,7 @@ export const volvoVehicles: VolvoVehicle[] = [
   {
     id: 'xc40',
     name: 'XC40',
-    displayName: 'Volvo EX40 Recharge',
+    displayName: 'Volvo EX40',
     batteryCapacity: 79,
     autonomy: 393,
     priceRange: '300-400k',
