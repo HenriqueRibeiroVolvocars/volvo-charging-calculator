@@ -62,7 +62,7 @@ const Index = () => {
               className="w-10 h-10"
             />
             <h1 className="text-3xl font-bold text-primary-foreground tracking-wide">
-              VOLVO HOME CHARGING
+              VOLVO ELECTRIC COMPARISON
             </h1>
           </div>
 
