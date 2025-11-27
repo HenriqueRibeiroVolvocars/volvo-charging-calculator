@@ -83,7 +83,7 @@ const Index = () => {
 
 
       {/* Main Content */}
-      <main className="pt-32 pb-20 px-4">
+      <main className="pt-44 md:pt-32 pb-20 px-4">
         <AnimatePresence mode="wait">
           {appState.step === 'vehicle' && (
             <motion.div
