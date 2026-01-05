@@ -16,67 +16,30 @@ export async function fetchCompetitorVehicles(): Promise<CompetitorVehicle[]> {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   if (!apiUrl) {
-    console.error('❌ Erro: VITE_API_URL não configurada no .env');
+    console.error('❌ VITE_API_URL não configurada');
     return [];
   }
 
   try {
-    console.log('🔗 Buscando dados da API...');
-    console.log('URL:', apiUrl);
-
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(apiUrl); // 🔑 chave já vem na URL
 
     if (!response.ok) {
-      console.error('Erro na resposta da API:', response.status, response.statusText);
       throw new Error(`Erro ao buscar dados (${response.status})`);
     }
 
-    const data = await response.json();
-    console.log('📦 Dados recebidos da API:', data);
+    const json = await response.json();
 
-    if (!Array.isArray(data)) {
-      console.warn('⚠️ A resposta da API não é um array:', data);
-      return [];
-    }
+    const data = json?.ResultSets?.Table1;
+    if (!Array.isArray(data)) return [];
 
-    const mappedData: CompetitorVehicle[] = data.map((vehicle: any) => ({
-      marca: vehicle.marca || vehicle.Marca || vehicle.brand,
-      modelo: vehicle.modelo || vehicle.Modelo || vehicle.model,
-      kmLCidade:
-        vehicle.km_l_cidade ||
-        vehicle.kmLCidade ||
-        vehicle.km_l_city ||
-        vehicle.city_km_l ||
-        vehicle.cidade ||
-        0,
-      kmLEstrada:
-        vehicle.km_l_estrada ||
-        vehicle.kmLEstrada ||
-        vehicle.km_l_highway ||
-        vehicle.highway_km_l ||
-        vehicle.estrada ||
-        0,
-      tipoCombustivel:
-        vehicle.tipo_combustivel ||
-        vehicle.tipoCombustivel ||
-        vehicle.fuel_type ||
-        vehicle.combustivel ||
-        vehicle.tipo,
-      kmEletrico:
-        vehicle.km_eletrico ||
-        vehicle.kmEletrico ||
-        vehicle.electric_range ||
-        vehicle.autonomia_eletrica ||
-        undefined,
+    return data.map((vehicle: any) => ({
+      marca: vehicle.Marca,
+      modelo: `${vehicle.Modelo} ${vehicle.Versao ?? ''}`.trim(),
+      kmLCidade: Number(vehicle.cidade) || 0,
+      kmLEstrada: Number(vehicle.estrada) || 0,
+      tipoCombustivel: vehicle.tipo,
+      kmEletrico: vehicle.km_eletrico ?? undefined,
     }));
-
-    console.log('✅ Dados processados:', mappedData);
-    return mappedData;
   } catch (error) {
     console.error('❌ Erro ao buscar dados:', error);
     return [];
