@@ -9,17 +9,14 @@ export interface CompetitorVehicle {
 
 /**
  * Função para buscar dados de veículos competidores
- * Variáveis de ambiente esperadas:
+ * Variável de ambiente esperada:
  *  - VITE_API_URL=https://sua-api.com/inmetro_database
- *  - VITE_API_KEY=sua_chave_aqui
  */
 export async function fetchCompetitorVehicles(): Promise<CompetitorVehicle[]> {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const apiKey = import.meta.env.VITE_API_KEY;
 
-  if (!apiUrl || !apiKey) {
-    console.error('❌ Erro: Variáveis de ambiente ausentes.');
-    console.error('Verifique se VITE_API_URL e VITE_API_KEY estão configuradas no .env');
+  if (!apiUrl) {
+    console.error('❌ Erro: VITE_API_URL não configurada no .env');
     return [];
   }
 
@@ -31,7 +28,6 @@ export async function fetchCompetitorVehicles(): Promise<CompetitorVehicle[]> {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': apiKey, // 🔑 Apenas apikey
       },
     });
 
@@ -48,14 +44,35 @@ export async function fetchCompetitorVehicles(): Promise<CompetitorVehicle[]> {
       return [];
     }
 
-    // Mapeia os dados retornados para o formato padrão
     const mappedData: CompetitorVehicle[] = data.map((vehicle: any) => ({
       marca: vehicle.marca || vehicle.Marca || vehicle.brand,
       modelo: vehicle.modelo || vehicle.Modelo || vehicle.model,
-      kmLCidade: vehicle.km_l_cidade || vehicle.kmLCidade || vehicle.km_l_city || vehicle.city_km_l || vehicle.cidade || 0,
-      kmLEstrada: vehicle.km_l_estrada || vehicle.kmLEstrada || vehicle.km_l_highway || vehicle.highway_km_l || vehicle.estrada || 0,
-      tipoCombustivel: vehicle.tipo_combustivel || vehicle.tipoCombustivel || vehicle.fuel_type || vehicle.combustivel || vehicle.tipo,
-      kmEletrico: vehicle.km_eletrico || vehicle.kmEletrico || vehicle.electric_range || vehicle.autonomia_eletrica || undefined,
+      kmLCidade:
+        vehicle.km_l_cidade ||
+        vehicle.kmLCidade ||
+        vehicle.km_l_city ||
+        vehicle.city_km_l ||
+        vehicle.cidade ||
+        0,
+      kmLEstrada:
+        vehicle.km_l_estrada ||
+        vehicle.kmLEstrada ||
+        vehicle.km_l_highway ||
+        vehicle.highway_km_l ||
+        vehicle.estrada ||
+        0,
+      tipoCombustivel:
+        vehicle.tipo_combustivel ||
+        vehicle.tipoCombustivel ||
+        vehicle.fuel_type ||
+        vehicle.combustivel ||
+        vehicle.tipo,
+      kmEletrico:
+        vehicle.km_eletrico ||
+        vehicle.kmEletrico ||
+        vehicle.electric_range ||
+        vehicle.autonomia_eletrica ||
+        undefined,
     }));
 
     console.log('✅ Dados processados:', mappedData);
@@ -70,5 +87,5 @@ export async function fetchCompetitorVehicles(): Promise<CompetitorVehicle[]> {
  * Função auxiliar para obter todos os veículos competidores.
  */
 export async function getAllCompetitorVehicles(): Promise<CompetitorVehicle[]> {
-  return await fetchCompetitorVehicles();
+  return fetchCompetitorVehicles();
 }
